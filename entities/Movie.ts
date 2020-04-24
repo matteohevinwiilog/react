@@ -7,6 +7,8 @@ export default interface Movie {
         imageLinks: {
             thumbnail: string
         },
+    },
+    saleInfo: {
         buyLink: string
     }
 }
