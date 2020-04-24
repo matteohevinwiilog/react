@@ -10,36 +10,45 @@ import {
     Linking
 } from "react-native";
 import React from "react";
+import { useNavigation } from '@react-navigation/native';
 
-export function Loader() {
+export function Loader({loading}) {
     return (
-        <ActivityIndicator color="#0000ff" size={100} animating/>
+        loading
+            ?
+            <ActivityIndicator color="#0000ff" size={100} animating/>
+            :
+            <View/>
     )
 }
 
-export function SearchInput({callback}) {
+export function SearchInput({onChange}) {
     return (
         <TextInput style={styles.input}
-                   onChangeText={text => callback(text)}
+                   onChangeText={text => onChange(text)}
                    placeholder="Search for an author...."/>
     )
 }
 
-export function List({movies}) {
+export function List({movies, forceEmpty, navigation}) {
     return (
-        <FlatList
-            contentContainerStyle={styles.listContainer}
-            data={movies}
-            renderItem={({item}) =>
-                (
-                    <Item movie={item}/>
-                )}/>
+        movies && movies.length > 0 && !forceEmpty
+            ?
+            <FlatList
+                contentContainerStyle={styles.listContainer}
+                data={movies}
+                renderItem={({item}) =>
+                    (
+                        <Item movie={item} navigation={navigation}/>
+                    )}/>
+            :
+            <View/>
     )
 }
 
-function Item({movie}) {
+function Item({movie, navigation}) {
     return (
-        <TouchableHighlight onPress={() => goToBuyingPage(movie.saleInfo.buyLink)} underlayColor="white">
+        <TouchableHighlight onPress={() => navigation.navigate("Details", movie)} underlayColor="white">
             <View style={styles.item}>
                 <Image source={
                     {
@@ -59,12 +68,6 @@ function Item({movie}) {
             </View>
         </TouchableHighlight>
     );
-}
-
-function goToBuyingPage(buyingPage) {
-    if (buyingPage) {
-        Linking.openURL(buyingPage);
-    }
 }
 
 const styles = StyleSheet.create({
