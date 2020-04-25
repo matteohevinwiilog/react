@@ -58,13 +58,6 @@ function Item({movie, navigation}) {
                     }
                 } style={styles.listImage}/>
                 <Text style={styles.title}>{movie.volumeInfo.title}</Text>
-                <Text style={styles.date}>{movie.volumeInfo.publishedDate}</Text>
-                <Text style={styles.subtitle}>{
-                    movie.volumeInfo.description
-                        ?
-                        movie.volumeInfo.description.slice(0, 97) + '...'
-                        : 'Aucune description'
-                }</Text>
             </View>
         </TouchableHighlight>
     );
