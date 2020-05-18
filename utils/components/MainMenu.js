@@ -1,7 +1,7 @@
 import React from "react";
 import {key} from "../../assets/api_credentials";
 import {StyleSheet, View} from "react-native";
-import {List, Loader, SearchInput} from "./utils";
+import {MovieList, Loader, SearchInput} from "./utils";
 
 export default class MainMenu extends React.Component {
     constructor(props) {
@@ -45,9 +45,9 @@ export default class MainMenu extends React.Component {
             <View style={styles.container}>
                 <SearchInput onChange={this.textChanged}/>
                 <Loader loading={this.loading}/>
-                <List movies={this.movies}
-                      navigation={this.props.navigation}
-                      forceEmpty={this.forceEmpty}/>
+                <MovieList movies={this.movies}
+                           navigation={this.props.navigation}
+                           forceEmpty={this.forceEmpty}/>
             </View>
         )
     }

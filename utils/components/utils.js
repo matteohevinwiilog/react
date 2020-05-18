@@ -30,7 +30,7 @@ export function SearchInput({onChange}) {
     )
 }
 
-export function List({movies, forceEmpty, navigation}) {
+export function MovieList({movies, forceEmpty, navigation}) {
     return (
         movies && movies.length > 0 && !forceEmpty
             ?
@@ -39,14 +39,14 @@ export function List({movies, forceEmpty, navigation}) {
                 data={movies}
                 renderItem={({item}) =>
                     (
-                        <Item movie={item} navigation={navigation}/>
+                        <MovieItem movie={item} navigation={navigation}/>
                     )}/>
             :
             <View/>
     )
 }
 
-function Item({movie, navigation}) {
+function MovieItem({movie, navigation}) {
     return (
         <TouchableHighlight onPress={() => navigation.navigate("Details", movie)} underlayColor="white">
             <View style={styles.item}>
