@@ -30,34 +30,35 @@ export function SearchInput({onChange}) {
     )
 }
 
-export function MovieList({movies, forceEmpty, navigation}) {
+export function TracksList({tracks, forceEmpty, navigation}) {
     return (
-        movies && movies.length > 0 && !forceEmpty
+        tracks && tracks.length > 0 && !forceEmpty
             ?
             <FlatList
                 contentContainerStyle={styles.listContainer}
-                data={movies}
+                data={tracks}
+                keyExtractor={item => String(item.track_id)}
                 renderItem={({item}) =>
                     (
-                        <MovieItem movie={item} navigation={navigation}/>
+                        <MovieItem track={item} navigation={navigation}/>
                     )}/>
             :
             <View/>
     )
 }
 
-function MovieItem({movie, navigation}) {
+function MovieItem({track, navigation}) {
     return (
-        <TouchableHighlight onPress={() => navigation.navigate("Details", movie)} underlayColor="white">
+        <TouchableHighlight onPress={() => navigation.navigate("Details", track)} underlayColor="white">
             <View style={styles.item}>
                 <Image source={
                     {
-                        uri: movie.volumeInfo.imageLinks
-                            ? movie.volumeInfo.imageLinks.thumbnail
+                        uri: track.cover
+                            ? track.cover
                             : 'https://www.labaleine.fr/sites/default/files/image-not-found.jpg'
                     }
                 } style={styles.listImage}/>
-                <Text style={styles.title}>{movie.volumeInfo.title}</Text>
+                <Text style={styles.title}>{track.track_name}</Text>
             </View>
         </TouchableHighlight>
     );

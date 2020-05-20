@@ -22,7 +22,7 @@ export function Main() {
                     name="Details"
                     options={
                         {
-                            title: 'Movie detail'
+                            title: 'Track detail'
                         }
                     }
                     component={MovieDetail} />

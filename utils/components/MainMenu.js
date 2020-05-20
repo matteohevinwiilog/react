@@ -1,43 +1,78 @@
 import React from "react";
 import {key} from "../../assets/api_credentials";
 import {StyleSheet, View} from "react-native";
-import {MovieList, Loader, SearchInput} from "./utils";
+import {TracksList, Loader, SearchInput} from "./utils";
 
 export default class MainMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.movies = [];
-        this.authorSearch = '';
+        this.tracks = [];
+        this.search = '';
         this.loading = false;
         this.forceEmpty = false;
         this.textChanged = this.textChanged.bind(this);
     }
 
     textChanged(text) {
-        this.authorSearch = text;
+        this.search = text;
         this.loading = true;
-        this.forceUpdate(this.retrieveMovies);
+        this.forceUpdate(this.retrieveTracks);
     }
 
-    retrieveMovies() {
-        if (this.authorSearch !== '') {
+    retrieveTracks() {
+        if (this.search !== '') {
             this.forceEmpty = false;
-            fetch('https://www.googleapis.com/books/v1/volumes?'
-                + `q=inauthor:${this.authorSearch}&`
-                + 'key=' + key
+            fetch('http://api.musixmatch.com/ws/1.1/track.search?'
+                + `q=${this.search}&page_size=10&page=1&s_track_rating=desc&`
+                + 'apikey=' + key
             ).then((rawResponse) => {
                 return rawResponse.json()
             }).then((formattedResponse) => {
-                this.movies = formattedResponse.items;
-                this.loading = false;
-                this.forceUpdate();
+                this.tracks = formattedResponse.message.body.track_list;
+                Promise.all(this.tracks.flatMap(track => this.retrieveTrackInfo(track.track.commontrack_id))).then((tracks) => {
+                    this.tracks = tracks;
+                    this.loading = false;
+                    this.forceUpdate();
+                });
             });
         } else {
-            this.movies = [];
+            this.tracks = [];
             this.loading = false;
             this.forceEmpty = true;
             this.forceUpdate();
         }
+    }
+
+    retrieveTrackInfo(trackId) {
+        return new Promise(resolve => {
+            fetch('http://api.musixmatch.com/ws/1.1/track.get?'
+                + `commontrack_id=${trackId}&`
+                + 'apikey=' + key
+            ).then((rawResponse) => {
+                return rawResponse.json()
+            }).then((formattedResponse) => {
+                let track = formattedResponse.message.body.track;
+                this.retrieveAlbumInfo(track.album_id).then((album) => {
+                    resolve({
+                        ...track,
+                        cover: album.album_coverart_100x100
+                    })
+                });
+            });
+        });
+    }
+
+    retrieveAlbumInfo(albumId) {
+        return new Promise(resolve => {
+            fetch('http://api.musixmatch.com/ws/1.1/album.get?'
+                + `album_id=${14250417}&`
+                + 'apikey=' + key
+            ).then((rawResponse) => {
+                return rawResponse.json()
+            }).then((formattedResponse) => {
+                resolve(formattedResponse.message.body.album);
+            });
+        });
     }
 
     render() {
@@ -45,9 +80,9 @@ export default class MainMenu extends React.Component {
             <View style={styles.container}>
                 <SearchInput onChange={this.textChanged}/>
                 <Loader loading={this.loading}/>
-                <MovieList movies={this.movies}
-                           navigation={this.props.navigation}
-                           forceEmpty={this.forceEmpty}/>
+                <TracksList tracks={this.tracks}
+                            navigation={this.props.navigation}
+                            forceEmpty={this.forceEmpty}/>
             </View>
         )
     }
