@@ -2,6 +2,7 @@ import React from "react";
 import {key} from "../../assets/api_credentials";
 import {StyleSheet, View} from "react-native";
 import {TracksList, Loader, SearchInput} from "./utils";
+import {Image} from 'react-native';
 
 export default class MainMenu extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class MainMenu extends React.Component {
         this.search = '';
         this.loading = false;
         this.forceEmpty = false;
+        this.logo = require('../../assets/logo_black.png');
         this.textChanged = this.textChanged.bind(this);
     }
 
@@ -65,7 +67,7 @@ export default class MainMenu extends React.Component {
     retrieveAlbumInfo(albumId) {
         return new Promise(resolve => {
             fetch('http://api.musixmatch.com/ws/1.1/album.get?'
-                + `album_id=${14250417}&`
+                + `album_id=${albumId}&`
                 + 'apikey=' + key
             ).then((rawResponse) => {
                 return rawResponse.json()
@@ -78,6 +80,12 @@ export default class MainMenu extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Image source={this.logo} style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginLeft: 10,
+                    marginRight: 10
+                }}/>
                 <SearchInput onChange={this.textChanged}/>
                 <Loader loading={this.loading}/>
                 <TracksList tracks={this.tracks}
