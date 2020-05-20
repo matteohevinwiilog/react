@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from "@react-navigation/stack";
 import MainMenu from "./components/MainMenu";
-import MovieDetail from "./components/MovieDetail";
+import TrackDetail from "./components/TrackDetail";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,7 @@ export function Main() {
                             title: 'Home'
                         }
                     }
-                    component={MainMenu} />
+                    component={MainMenu}/>
                 <Stack.Screen
                     name="Details"
                     options={
@@ -25,7 +25,7 @@ export function Main() {
                             title: 'Track detail'
                         }
                     }
-                    component={MovieDetail} />
+                    component={TrackDetail}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

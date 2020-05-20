@@ -26,7 +26,7 @@ export function SearchInput({onChange}) {
     return (
         <TextInput style={styles.input}
                    onChangeText={text => onChange(text)}
-                   placeholder="Search for an author...."/>
+                   placeholder="Rechercher un artiste ..."/>
     )
 }
 
@@ -40,14 +40,14 @@ export function TracksList({tracks, forceEmpty, navigation}) {
                 keyExtractor={item => String(item.track_id)}
                 renderItem={({item}) =>
                     (
-                        <MovieItem track={item} navigation={navigation}/>
+                        <TrackItem track={item} navigation={navigation}/>
                     )}/>
             :
             <View/>
     )
 }
 
-function MovieItem({track, navigation}) {
+function TrackItem({track, navigation}) {
     return (
         <TouchableHighlight onPress={() => navigation.navigate("Details", track)} underlayColor="white">
             <View style={styles.item}>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: 'black',
         borderWidth: 1,
-        marginTop: 70,
+        marginTop: 30,
         marginLeft: 20,
         marginRight: 20,
         padding: 10
