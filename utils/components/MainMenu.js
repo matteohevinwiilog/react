@@ -11,6 +11,7 @@ export default class MainMenu extends React.Component {
         this.search = '';
         this.loading = false;
         this.forceEmpty = false;
+        this.page = 1;
         this.logo = require('../../assets/logo_black.png');
         this.textChanged = this.textChanged.bind(this);
     }
@@ -25,7 +26,7 @@ export default class MainMenu extends React.Component {
         if (this.search !== '') {
             this.forceEmpty = false;
             fetch('http://api.musixmatch.com/ws/1.1/track.search?'
-                + `q=${this.search}&page_size=10&page=1&s_track_rating=desc&`
+                + `q=${this.search}&page_size=10&page=${this.page}&s_track_rating=desc&`
                 + 'apikey=' + key
             ).then((rawResponse) => {
                 return rawResponse.json()
@@ -77,6 +78,12 @@ export default class MainMenu extends React.Component {
         });
     }
 
+    changePage(page) {
+        this.setState({
+            page: page
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -90,7 +97,8 @@ export default class MainMenu extends React.Component {
                 <Loader loading={this.loading}/>
                 <TracksList tracks={this.tracks}
                             navigation={this.props.navigation}
-                            forceEmpty={this.forceEmpty}/>
+                            forceEmpty={this.forceEmpty}
+                            callback={this.changePage}/>
             </View>
         )
     }

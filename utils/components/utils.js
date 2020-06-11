@@ -10,7 +10,8 @@ import {
     Linking
 } from "react-native";
 import React from "react";
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import Pagination from "./Pagination";
 
 export function Loader({loading}) {
     return (
@@ -30,18 +31,24 @@ export function SearchInput({onChange}) {
     )
 }
 
-export function TracksList({tracks, forceEmpty, navigation}) {
+export function TracksList({tracks, forceEmpty, navigation, callback}) {
     return (
         tracks && tracks.length > 0 && !forceEmpty
             ?
-            <FlatList
-                contentContainerStyle={styles.listContainer}
-                data={tracks}
-                keyExtractor={item => String(item.track_id)}
-                renderItem={({item}) =>
-                    (
-                        <TrackItem track={item} navigation={navigation}/>
-                    )}/>
+            <View>
+                <FlatList
+                    contentContainerStyle={styles.listContainer}
+                    data={tracks}
+                    keyExtractor={item => String(item.track_id)}
+                    renderItem={({item}) =>
+                        (
+                            <TrackItem track={item} navigation={navigation}/>
+                        )}/>
+                <Pagination items={tracks}
+                            elementsPerPage={10}
+                            callback={callback}
+                />
+            </View>
             :
             <View/>
     )
